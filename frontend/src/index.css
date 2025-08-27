@@ -1,11 +1,1 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: "Nunito", sans-serif;
-  background-color: rgba(255, 255, 255, 0.951);
-  color: #222;
-}
+@import "tailwindcss";
