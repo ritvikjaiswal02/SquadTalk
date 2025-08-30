@@ -1,7 +1,7 @@
 import { UserButton } from "@clerk/clerk-react";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
-import { useStreamChat } from "../hooks/useStreamChat";
+import { useStreamChat } from "../hooks/useStreamChat.js";
 import PageLoader from "../components/PageLoader";
 
 import {
