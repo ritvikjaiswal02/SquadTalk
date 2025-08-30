@@ -15,7 +15,6 @@ import {
 } from "stream-chat-react";
 
 import "../styles/stream-chat-theme.css";
-
 import { HashIcon, PlusIcon, UsersIcon } from "lucide-react";
 import CreateChannelModal from "../components/CreateChannelModal";
 import CustomChannelPreview from "../components/CustomChannelPreview";
