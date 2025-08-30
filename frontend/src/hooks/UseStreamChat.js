@@ -25,7 +25,7 @@ export const useStreamChat = () => {
     queryFn: getStreamToken,
     enabled: !!user?.id, // this will take the object and convert it to a boolean
   });
-
+  // read stream token
   // init stream chat client
   // init stream chat client
   useEffect(() => {
