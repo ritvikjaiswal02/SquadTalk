@@ -1,6 +1,6 @@
 import { UserButton } from "@clerk/clerk-react";
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router";
+import { useSearchParams } from "react-router"; // ✅ from react-router-dom
 import { useStreamChat } from "../hooks/useStreamChat.js";
 import PageLoader from "../components/PageLoader";
 
@@ -24,6 +24,7 @@ import CustomChannelHeader from "../components/CustomChannelHeader";
 const HomePage = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [activeChannel, setActiveChannel] = useState(null);
+  const [activeTab, setActiveTab] = useState("channels"); // "dm" | "channels" | "calls"
   const [searchParams, setSearchParams] = useSearchParams();
 
   const { chatClient, error, isLoading } = useStreamChat();
@@ -39,7 +40,6 @@ const HomePage = () => {
     }
   }, [chatClient, searchParams]);
 
-  // todo: handle this with a better component
   if (error) return <p>Something went wrong...</p>;
   if (isLoading || !chatClient) return <PageLoader />;
 
@@ -47,7 +47,48 @@ const HomePage = () => {
     <div className="chat-wrapper">
       <Chat client={chatClient}>
         <div className="chat-container">
-          {/* LEFT SIDEBAR */}
+          {/* LEFT VERTICAL RAIL (WhatsApp-style) */}
+          <aside className="app-rail">
+            <button
+              className={`app-rail__btn ${activeTab === "dm" ? "active" : ""}`}
+              onClick={() => setActiveTab("dm")}
+              title="Direct Messages"
+            >
+              <UsersIcon className="size-5" />
+              <span>DMs</span>
+            </button>
+
+            <button
+              className={`app-rail__btn ${
+                activeTab === "channels" ? "active" : ""
+              }`}
+              onClick={() => setActiveTab("channels")}
+              title="Channels"
+            >
+              <HashIcon className="size-5" />
+              <span>Channels</span>
+            </button>
+
+            <button
+              className={`app-rail__btn ${
+                activeTab === "calls" ? "active" : ""
+              }`}
+              onClick={() => setActiveTab("calls")}
+              title="Calls"
+            >
+              {/* Using PlusIcon here just as a placeholder phone glyph if you don't have PhoneIcon */}
+              <PlusIcon className="size-5" />
+              <span>Calls</span>
+            </button>
+
+            <div className="app-rail__footer">
+              <div className="user-button-wrapper">
+                <UserButton />
+              </div>
+            </div>
+          </aside>
+
+          {/* MIDDLE SIDEBAR (switches content based on active tab) */}
           <div className="str-chat__channel-list">
             <div className="team-channel-list">
               {/* HEADER */}
@@ -60,73 +101,95 @@ const HomePage = () => {
                   />
                   <span className="brand-name">SquadTalk</span>
                 </div>
-                <div className="user-button-wrapper">
-                  <UserButton />
-                </div>
               </div>
-              {/* CHANNELS LIST */}
+
+              {/* CONTENT */}
               <div className="team-channel-list__content">
-                <div className="create-channel-section">
-                  <button
-                    onClick={() => setIsCreateModalOpen(true)}
-                    className="create-channel-btn"
-                  >
-                    <PlusIcon className="size-4" />
-                    <span>Create Channel</span>
-                  </button>
-                </div>
+                {/* CHANNELS TAB */}
+                {activeTab === "channels" && (
+                  <>
+                    <div className="create-channel-section">
+                      <button
+                        onClick={() => setIsCreateModalOpen(true)}
+                        className="create-channel-btn"
+                      >
+                        <PlusIcon className="size-4" />
+                        <span>Create Channel</span>
+                      </button>
+                    </div>
 
-                {/* CHANNEL LIST */}
-                <ChannelList
-                  filters={{ members: { $in: [chatClient?.user?.id] } }}
-                  options={{ state: true, watch: true }}
-                  Preview={({ channel }) => (
-                    <CustomChannelPreview
-                      channel={channel}
-                      activeChannel={activeChannel}
-                      setActiveChannel={(channel) =>
-                        setSearchParams({ channel: channel.id })
-                      }
+                    <ChannelList
+                      filters={{ members: { $in: [chatClient?.user?.id] } }}
+                      options={{ state: true, watch: true }}
+                      Preview={({ channel }) => (
+                        <CustomChannelPreview
+                          channel={channel}
+                          activeChannel={activeChannel}
+                          setActiveChannel={(channel) =>
+                            setSearchParams({ channel: channel.id })
+                          }
+                        />
+                      )}
+                      List={({ children, loading, error }) => (
+                        <div className="channel-sections">
+                          <div className="section-header">
+                            <div className="section-title">
+                              <HashIcon className="size-4" />
+                              <span>Channels</span>
+                            </div>
+                          </div>
+
+                          {loading && (
+                            <div className="loading-message">
+                              Loading channels...
+                            </div>
+                          )}
+                          {error && (
+                            <div className="error-message">
+                              Error loading channels
+                            </div>
+                          )}
+
+                          <div className="channels-list">{children}</div>
+                        </div>
+                      )}
                     />
-                  )}
-                  List={({ children, loading, error }) => (
-                    <div className="channel-sections">
-                      <div className="section-header">
-                        <div className="section-title">
-                          <HashIcon className="size-4" />
-                          <span>Channels</span>
-                        </div>
+                  </>
+                )}
+
+                {/* DIRECT MESSAGES TAB */}
+                {activeTab === "dm" && (
+                  <div className="channel-sections">
+                    <div className="section-header">
+                      <div className="section-title">
+                        <UsersIcon className="size-4" />
+                        <span>Direct Messages</span>
                       </div>
-
-                      {/* todos: add better components here instead of just a simple text  */}
-                      {loading && (
-                        <div className="loading-message">
-                          Loading channels...
-                        </div>
-                      )}
-                      {error && (
-                        <div className="error-message">
-                          Error loading channels
-                        </div>
-                      )}
-
-                      <div className="channels-list">{children}</div>
-
-                      <div className="section-header direct-messages">
-                        <div className="section-title">
-                          <UsersIcon className="size-4" />
-                          <span>Direct Messages</span>
-                        </div>
-                      </div>
+                    </div>
+                    <div className="channels-list">
                       <UsersList activeChannel={activeChannel} />
                     </div>
-                  )}
-                />
+                  </div>
+                )}
+
+                {/* CALLS TAB (placeholder) */}
+                {activeTab === "calls" && (
+                  <div className="channel-sections">
+                    <div className="section-header">
+                      <div className="section-title">
+                        <span>Calls</span>
+                      </div>
+                    </div>
+                    <div className="team-channel-list__message">
+                      Voice/Video calls coming soon.
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
 
-          {/* RIGHT CONTAINER */}
+          {/* RIGHT MAIN CHAT */}
           <div className="chat-main">
             <Channel channel={activeChannel}>
               <Window>
@@ -134,7 +197,6 @@ const HomePage = () => {
                 <MessageList />
                 <MessageInput />
               </Window>
-
               <Thread />
             </Channel>
           </div>
@@ -147,4 +209,5 @@ const HomePage = () => {
     </div>
   );
 };
+
 export default HomePage;

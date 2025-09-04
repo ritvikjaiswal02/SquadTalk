@@ -1110,3 +1110,2180 @@
     border-radius: 0 0 0.75rem 0.75rem;
   }
 }
+/* ===== Fullscreen Overrides (place at END of file) ===== */
+
+/* Make the whole app fill the viewport */
+html,
+body,
+#root {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+}
+
+/* Remove outer padding/card feel */
+.chat-wrapper {
+  min-height: 100vh !important;
+  width: 100vw !important;
+  padding: 0 !important; /* kill outer spacing */
+  margin: 0 !important;
+  overflow: hidden; /* no scroll bleed outside */
+}
+
+/* Stretch container to full screen and remove card styling */
+.chat-container {
+  height: 100vh !important;
+  width: 100vw !important;
+  max-width: none !important; /* remove 1400px cap */
+  margin: 0 !important;
+  border-radius: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important; /* optional: remove glass effect */
+  background: transparent !important; /* let gradient show behind sidebar only */
+  display: flex;
+  overflow: hidden;
+}
+
+/* Sidebar fixed width; full height */
+.str-chat__channel-list {
+  width: 300px !important; /* tweak as you like */
+  height: 100% !important;
+  flex-shrink: 0 !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  background-color: transparent !important; /* keep gradient on left */
+}
+
+/* Main chat fills the rest, fully opaque so purple doesn't bleed */
+.chat-main {
+  flex: 1 !important;
+  height: 100% !important;
+  border-radius: 0 !important;
+  background: #ffffff !important; /* solid; or #f7f8fa for Slack-ish */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Ensure Stream content paints solid & spans full width */
+.chat-main .str-chat__main-panel,
+.chat-main .str-chat__window,
+.chat-main .str-chat__message-list,
+.chat-main .str-chat__list,
+.chat-main .str-chat__ul,
+.chat-main .str-chat__container {
+  background: #ffffff !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-height: 100% !important;
+  flex: 1 1 auto !important;
+}
+
+/* Responsive tweaks: no re-introduced padding/radii on small screens */
+@media (max-width: 768px) {
+  .chat-wrapper {
+    padding: 0 !important;
+  }
+  .chat-container {
+    height: 100vh !important;
+    border-radius: 0 !important;
+  }
+  .chat-main {
+    border-radius: 0 !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .chat-container {
+    flex-direction: column;
+  }
+  .str-chat__channel-list {
+    width: 100% !important;
+    height: 220px !important; /* collapsible header height */
+    border-right: none !important;
+    border-bottom: 1px solid rgba(116, 58, 213, 0.3);
+  }
+  .chat-main {
+    border-radius: 0 !important;
+  }
+}
+
+/* ===== WhatsApp-style Left Rail + Middle Sidebar ===== */
+
+/* Thin vertical rail on the far left */
+.app-rail {
+  width: 72px;
+  height: 100vh;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.5rem;
+  padding: 0.75rem 0.5rem;
+  background: rgba(0, 0, 0, 0.25); /* lets your gradient show through nicely */
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+}
+
+/* Rail Buttons */
+.app-rail__btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.9);
+  padding: 0.6rem 0.4rem;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease,
+    border-color 0.2s ease;
+  text-align: center;
+  font-size: 0.7rem;
+}
+
+.app-rail__btn:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+}
+
+.app-rail__btn.active {
+  background: linear-gradient(
+    135deg,
+    rgba(114, 9, 183, 0.3),
+    rgba(74, 21, 75, 0.3)
+  );
+  border-color: rgba(114, 9, 183, 0.6);
+  box-shadow: 0 8px 22px rgba(114, 9, 183, 0.35);
+}
+
+/* Stick the Clerk button at bottom of the rail */
+.app-rail__footer {
+  margin-top: auto;
+  padding: 0.25rem;
+}
+
+/* Make the middle list column wider (WhatsApp-like) */
+.str-chat__channel-list {
+  width: 340px !important; /* was 300; wider feels like WhatsApp */
+  height: 100% !important;
+  flex-shrink: 0 !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+/* ===== Polished Top Bar (sticky, subtle gradient, clear separation) ===== */
+
+.chat-main .str-chat__header,
+.chat-main .custom-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  /* visual separation from chat */
+  background: linear-gradient(180deg, #ffffff 0%, #f7f8fb 100%);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+
+  /* feels “elevated” over the message list */
+  box-shadow: 0 2px 8px rgba(16, 24, 40, 0.06);
+  backdrop-filter: saturate(150%) blur(4px);
+
+  padding: 10px 16px;
+}
+
+/* Title + tiny meta row */
+.custom-topbar__title {
+  font-weight: 700;
+  font-size: 16px;
+  color: #1d1c1d;
+  line-height: 1.2;
+}
+
+.custom-topbar__meta {
+  font-size: 12px;
+  color: #616061;
+}
+
+/* Left group: title + meta stacked */
+.custom-topbar__left {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+/* Right actions container */
+.custom-topbar__right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Simple pill separators (optional) */
+.custom-topbar__pill {
+  padding: 6px 10px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: #fff;
+  border-radius: 999px;
+  font-size: 12px;
+  color: #3d3d3d;
+}
+
+/* Invite button styled to match your purple theme */
+.btn-invite {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: #fff;
+  border: 1px solid rgba(114, 9, 183, 0.5);
+  background: linear-gradient(135deg, #7209b7 0%, #533483 100%);
+  box-shadow: 0 6px 14px rgba(114, 9, 183, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.btn-invite:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+  box-shadow: 0 10px 18px rgba(114, 9, 183, 0.3);
+}
+
+/* Make sure messages don’t “peek” behind the sticky header during scroll */
+.chat-main .str-chat__message-list {
+  background: #fff !important;
+}
+/* ===== Improved Top Bar Visibility ===== */
+.chat-main .custom-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20; /* above message list */
+  height: 64px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  /* stronger separation + subtle tint */
+  background: linear-gradient(180deg, #ffffff 0%, #f7f8fb 100%);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.6) inset,
+    /* top hairline for “edge” */ 0 6px 14px rgba(16, 24, 40, 0.08); /* deeper drop shadow */
+  backdrop-filter: saturate(140%) blur(6px);
+
+  padding: 10px 16px;
+}
+
+/* prevent message content from peeking under sticky bar */
+.chat-main .str-chat__message-list {
+  background: #fff !important;
+  scroll-margin-top: 64px; /* anchor jumps don’t hide under header */
+}
+
+/* Left: icon/avatar + title/meta */
+.custom-topbar__left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0; /* enables truncation */
+}
+
+.custom-topbar__title-wrap {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.custom-topbar__title {
+  font-weight: 700;
+  font-size: 16px;
+  color: #1d1c1d;
+  line-height: 1.2;
+  max-width: min(48vw, 560px);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* truncate long names */
+}
+
+.custom-topbar__meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #616061;
+}
+
+/* tiny pill badges */
+.topbar-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  background: #fff;
+  border-radius: 999px;
+  font-size: 11px;
+  color: #3d3d3d;
+  line-height: 1;
+}
+
+.topbar-pill .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #bbb;
+}
+
+.topbar-pill--private .dot {
+  background: #c026d3;
+} /* purple dot */
+.topbar-pill--public .dot {
+  background: #64748b;
+} /* slate dot */
+
+/* Right: actions; collapse gracefully on narrow widths */
+.custom-topbar__right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  overflow-x: auto; /* prevents wrapping jitter on small screens */
+  padding-bottom: 2px; /* hide scrollbar track nicely on Windows */
+}
+
+/* Icon buttons */
+.topbar-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 34px;
+  width: 34px;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  background: #fff;
+  transition: transform 0.12s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.topbar-btn:hover {
+  background: #f4f5f7;
+  box-shadow: 0 4px 12px rgba(16, 24, 40, 0.08);
+  transform: translateY(-1px);
+}
+
+/* Thin divider between groups */
+.topbar-sep {
+  width: 1px;
+  height: 22px;
+  background: rgba(0, 0, 0, 0.08);
+  margin: 0 4px;
+}
+
+/* Invite button matches your purple theme */
+.btn-invite {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: #fff;
+  border: 1px solid rgba(114, 9, 183, 0.5);
+  background: linear-gradient(135deg, #7209b7 0%, #533483 100%);
+  box-shadow: 0 6px 14px rgba(114, 9, 183, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.2s ease, filter 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn-invite:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+  box-shadow: 0 10px 18px rgba(114, 9, 183, 0.3);
+}
+
+/* Small tweaks for very narrow screens */
+@media (max-width: 640px) {
+  .custom-topbar {
+    height: 56px;
+  }
+  .custom-topbar__title {
+    max-width: 45vw;
+    font-size: 15px;
+  }
+}
+/* ===== Step 1: Visible Purple Topbar ===== */
+:root {
+  /* reuse your palette */
+  --topbar-grad-a: var(--primary-color); /* #4a154b */
+  --topbar-grad-b: #533483;
+  --topbar-grad-c: var(--primary-color-alpha); /* #350d36 */
+}
+
+.custom-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 25;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+
+  /* purple gradient + clear separation */
+  background: linear-gradient(
+    135deg,
+    var(--topbar-grad-a) 0%,
+    var(--topbar-grad-b) 55%,
+    var(--topbar-grad-c) 100%
+  ) !important;
+  color: #fff;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
+  backdrop-filter: saturate(140%) blur(6px);
+}
+
+/* left cluster (icon/avatar + title + meta) */
+.custom-topbar__left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.custom-topbar__title-wrap {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.custom-topbar__title {
+  font-weight: 800;
+  font-size: 16px;
+  line-height: 1.2;
+  color: #fff;
+  max-width: min(48vw, 560px);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.custom-topbar__meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* tiny glassy pills */
+.topbar-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  font-size: 11px;
+  color: #fff;
+  line-height: 1;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  backdrop-filter: blur(6px);
+}
+.topbar-pill .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #fff;
+}
+
+/* right cluster (buttons) */
+.custom-topbar__right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* icon buttons on purple */
+.topbar-btn {
+  height: 34px;
+  width: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.12);
+  transition: transform 0.12s ease, background 0.2s ease, box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+.topbar-btn:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.38);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+}
+
+/* Invite CTA keeps the same purple family but brighter */
+.btn-invite {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: #fff;
+  white-space: nowrap;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: linear-gradient(135deg, #a515b7 0%, #7209b7 50%, #533483 100%);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transition: transform 0.12s ease, filter 0.2s ease, box-shadow 0.2s ease;
+}
+.btn-invite:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+}
+
+/* icons inside the topbar should read as white */
+.custom-topbar svg {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+/* keep messages from sliding under the sticky bar */
+.chat-main .str-chat__message-list {
+  scroll-margin-top: 64px;
+}
+
+/* if Stream's default header appears, hide it (optional) */
+.chat-main .str-chat__header {
+  display: none !important;
+}
+/* ===== Topbar: clearer, cooler purple + separation from left bars ===== */
+:root {
+  --topbar-a: #5e2a7a; /* slightly cooler than sidebar */
+  --topbar-b: #7b3fbf; /* brighter mid */
+  --topbar-c: #3b1f5e; /* deeper tail */
+}
+
+.custom-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+
+  /* cooler gradient so it doesn't blend with the left rail */
+  background: linear-gradient(
+    135deg,
+    var(--topbar-a) 0%,
+    var(--topbar-b) 55%,
+    var(--topbar-c) 100%
+  );
+  color: #fff;
+
+  /* make it “float” above messages and not merge with sidebar */
+  border-bottom: 1px solid rgba(0, 0, 0, 0.18);
+  border-left: 1px solid rgba(255, 255, 255, 0.12); /* visual edge against sidebar */
+  box-shadow: 0 8px 18px rgba(16, 24, 40, 0.18);
+}
+
+/* Keep Stream's default header hidden */
+.chat-main .str-chat__header {
+  display: none !important;
+}
+
+/* Prevent content from sliding under sticky bar */
+.chat-main .str-chat__message-list {
+  scroll-margin-top: 64px;
+}
+
+/* --- Layout inside the bar --- */
+.custom-topbar__left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0; /* enables truncation */
+  flex: 1 1 auto; /* title gets the space */
+}
+
+/* Wrap for title + small meta (title must truncate) */
+.custom-topbar__title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.custom-topbar__title {
+  font-weight: 800;
+  font-size: 16px;
+  line-height: 1.2;
+  color: #fff;
+
+  /* never overflow: occupy remaining space and ellipsize */
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Compact inline meta so we stay in one line */
+.custom-topbar__meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.92);
+  flex: 0 0 auto;
+}
+
+.topbar-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  font-size: 11px;
+  line-height: 1;
+  border-radius: 999px;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  backdrop-filter: blur(6px);
+}
+.topbar-pill .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #fff;
+}
+.topbar-pill--private .dot {
+  background: #eab308;
+} /* gold dot for private */
+.topbar-pill--public .dot {
+  background: #a5b4fc;
+} /* periwinkle for public */
+
+/* Right-side actions never push title off-screen */
+.custom-topbar__right {
+  margin-left: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 0 0 auto; /* fixed width cluster */
+  min-width: 0;
+}
+
+.topbar-btn {
+  height: 34px;
+  width: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.12);
+  transition: transform 0.12s ease, background 0.2s ease, box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+.topbar-btn:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.38);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+}
+
+/* Invite CTA pops but stays in palette */
+.btn-invite {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: #fff;
+  white-space: nowrap;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: linear-gradient(135deg, #8d2be2 0%, #7b3fbf 50%, #5e2a7a 100%);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* Icons read as white on the bar */
+.custom-topbar svg {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+/* Tighter mode on very small screens: hide pills if space is tight */
+@media (max-width: 640px) {
+  .custom-topbar {
+    height: 56px;
+  }
+  .custom-topbar__meta {
+    display: none;
+  } /* keep it one line */
+  .custom-topbar__title {
+    font-size: 15px;
+  }
+}
+/* ===== Fixed Topbar: Distinct color + proper text containment ===== */
+:root {
+  /* New topbar palette - cooler blues/teals to contrast purple sidebar */
+  --topbar-primary: #1e40af; /* blue-700 */
+  --topbar-secondary: #2563eb; /* blue-600 */
+  --topbar-accent: #0f172a; /* slate-900 */
+}
+
+.custom-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+
+  /* Distinct blue gradient - clearly separate from purple sidebar */
+  background: linear-gradient(
+    135deg,
+    var(--topbar-primary) 0%,
+    var(--topbar-secondary) 55%,
+    var(--topbar-accent) 100%
+  );
+  color: #fff;
+
+  /* Clear visual separation */
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  border-left: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 18px rgba(16, 24, 40, 0.2);
+  backdrop-filter: saturate(140%) blur(6px);
+}
+
+/* Left section - properly contained */
+.custom-topbar__left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0; /* Critical for text truncation */
+  max-width: calc(100% - 200px); /* Reserve space for right actions */
+}
+
+/* Title container - handles overflow properly */
+.custom-topbar__title-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 0; /* Essential for ellipsis */
+}
+
+/* Channel title - properly truncated */
+.custom-topbar__title {
+  font-weight: 800;
+  font-size: 16px;
+  line-height: 1.2;
+  color: #fff;
+
+  /* Proper text overflow handling */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  display: block;
+}
+
+/* Meta info - compact and contained */
+.custom-topbar__meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.9);
+  flex-wrap: wrap;
+}
+
+/* Pills with blue theme */
+.topbar-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  font-size: 11px;
+  line-height: 1;
+  border-radius: 999px;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(6px);
+  white-space: nowrap;
+}
+
+.topbar-pill .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #fff;
+  flex-shrink: 0;
+}
+
+.topbar-pill--private .dot {
+  background: #fbbf24; /* amber for private */
+}
+.topbar-pill--public .dot {
+  background: #34d399; /* emerald for public */
+}
+
+/* Right actions - fixed width */
+.custom-topbar__right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+/* Action buttons with blue theme */
+.topbar-btn {
+  height: 34px;
+  width: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.95);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.topbar-btn:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Invite button - blue theme */
+.btn-invite {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: #fff;
+  white-space: nowrap;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 50%, #1e40af 100%);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-invite:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.1);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+}
+
+/* Icons should be white */
+.custom-topbar svg {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .custom-topbar {
+    height: 56px;
+    padding: 8px 12px;
+  }
+
+  .custom-topbar__left {
+    max-width: calc(100% - 160px);
+  }
+
+  .custom-topbar__title {
+    font-size: 15px;
+  }
+
+  .custom-topbar__meta {
+    display: none; /* Hide meta on small screens to save space */
+  }
+}
+
+@media (max-width: 640px) {
+  .custom-topbar__left {
+    max-width: calc(100% - 120px);
+  }
+
+  .topbar-btn {
+    height: 32px;
+    width: 32px;
+  }
+}
+/* ===== WhatsApp-like Topbar Content Layout ===== */
+.custom-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 16px;
+
+  /* distinct from sidebars but still purple family */
+  background: linear-gradient(135deg, #5e2a7a 0%, #7b3fbf 55%, #3b1f5e 100%);
+  color: #fff;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.18);
+  border-left: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 8px 18px rgba(16, 24, 40, 0.18);
+}
+
+/* Left: avatar + two-line info */
+.custom-topbar__left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.topbar-avatar {
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  background: linear-gradient(
+    135deg,
+    #7b3fbf,
+    #5e2a7a
+  ); /* fallback when no img */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: #fff;
+}
+
+.topbar-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.topbar-title {
+  font-weight: 800;
+  font-size: 16px;
+  line-height: 1.2;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.topbar-subtitle {
+  margin-top: 2px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.9);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Right: round icon buttons like WhatsApp */
+.custom-topbar__right {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.topbar-btn {
+  height: 36px;
+  width: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.12);
+  transition: transform 0.12s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+.topbar-btn:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+}
+
+/* Optional “Invite” CTA chip (shows only for private channels) */
+.btn-invite {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: #fff;
+  white-space: nowrap;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: linear-gradient(135deg, #8d2be2 0%, #7b3fbf 50%, #5e2a7a 100%);
+}
+
+/* Icons on purple should read white */
+.custom-topbar svg {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+/* Keep content from hiding behind sticky header */
+.chat-main .str-chat__message-list {
+  scroll-margin-top: 64px;
+}
+
+/* Hide Stream's default header so only ours shows */
+.chat-main .str-chat__header {
+  display: none !important;
+}
+
+@media (max-width: 640px) {
+  .custom-topbar {
+    height: 56px;
+  }
+  .topbar-title {
+    font-size: 15px;
+  }
+  .topbar-subtitle {
+    display: none;
+  } /* keep one clean line on phones */
+}
+.custom-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  height: 64px;
+  display: flex;
+  justify-content: space-between; /* left + right separation */
+  align-items: center;
+  padding: 10px 16px;
+  gap: 0;
+
+  background: linear-gradient(135deg, #5e2a7a 0%, #7b3fbf 55%, #3b1f5e 100%);
+  color: #fff;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.18);
+  border-left: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 8px 18px rgba(16, 24, 40, 0.18);
+}
+
+/* Left: avatar + text cluster aligned left */
+.custom-topbar__left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1 1 auto; /* allow it to take available space */
+  min-width: 0; /* enables ellipsis */
+}
+
+/* Right: fixed width cluster, hugs the right edge */
+.custom-topbar__right {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+/* ===== Force channel name to the LEFT, actions to the RIGHT ===== */
+.custom-topbar {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important; /* don't distribute space evenly */
+  gap: 0 !important;
+}
+
+.custom-topbar__left {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  flex: 1 1 auto !important; /* grows and holds the title */
+  min-width: 0 !important; /* enables ellipsis */
+  margin-right: auto !important; /* PUSH the right cluster away */
+  text-align: left !important;
+}
+
+.topbar-info,
+.topbar-title,
+.topbar-subtitle {
+  text-align: left !important;
+}
+
+.custom-topbar__right {
+  flex: 0 0 auto !important; /* fixed-width cluster */
+  margin-left: auto !important; /* hug the right edge */
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+/* Safety: hide Stream's default header if it reappears */
+.chat-main .str-chat__header {
+  display: none !important;
+}
+
+/*
+ * This block ensures the topbar correctly aligns content to the left.
+ * It combines the necessary flexbox properties for a robust layout.
+ */
+.custom-topbar {
+  /* Set the display and alignment for the container */
+  display: flex;
+  align-items: center;
+  /* Use justify-content to start all items from the left */
+  justify-content: flex-start;
+
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  height: 64px;
+  padding: 10px 16px;
+  gap: 12px;
+
+  /* Retaining the existing styling */
+  background: linear-gradient(135deg, #5e2a7a 0%, #7b3fbf 55%, #3b1f5e 100%);
+  color: #fff;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.18);
+  border-left: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 8px 18px rgba(16, 24, 40, 0.18);
+}
+
+/* Left side content - this element contains the avatar and channel name/subtitle */
+.custom-topbar__left {
+  /* Allow this element to grow and take up all available space */
+  flex: 1;
+  min-width: 0; /* Crucial for text truncation */
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Right side content - this element contains the action buttons */
+.custom-topbar__right {
+  /* Prevent this element from growing; keep its size fixed */
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Ensure the title itself handles overflow correctly */
+.topbar-title {
+  /* Force text to stay on one line */
+  white-space: nowrap;
+  /* Hide any overflowing text */
+  overflow: hidden;
+  /* Show an ellipsis (...) for truncated text */
+  text-overflow: ellipsis;
+  /* Ensure it doesn't have a fixed width, but grows within its container */
+  flex: 1;
+  min-width: 0;
+}
+
+/* --- No change to other styles (avatar, buttons, etc.) --- */
+.topbar-avatar {
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  background: linear-gradient(135deg, #7b3fbf, #5e2a7a);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.topbar-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.topbar-subtitle {
+  margin-top: 2px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.9);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.topbar-btn {
+  height: 36px;
+  width: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.12);
+  transition: transform 0.12s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.custom-topbar svg {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.chat-main .str-chat__header {
+  display: none !important;
+}
+.custom-topbar {
+  margin-top: 1px; /* adjust px as you like */
+}
+/* Remove extra space above topbar */
+.chat-main,
+.str-chat__window,
+.str-chat__main-panel {
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+}
+
+.custom-topbar {
+  margin-top: 0 !important;
+  top: 0 !important; /* stick flush at top */
+}
+/* Left cluster: avatar + name inline */
+.custom-topbar__left {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+/* Avatar */
+.topbar-avatar {
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  background: linear-gradient(135deg, #7b3fbf, #5e2a7a);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  flex-shrink: 0; /* don’t shrink */
+}
+
+/* Info next to avatar */
+.topbar-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+
+/* Channel name */
+.topbar-title {
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1.2;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Subtitle below name */
+.topbar-subtitle {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.9);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.custom-topbar__left {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* space between pic and name */
+}
+
+.topbar-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+/* FINAL OVERRIDE: keep avatar BESIDE the name */
+.custom-topbar__left {
+  display: flex !important;
+  flex-direction: row !important; /* force horizontal */
+  align-items: center !important;
+  gap: 10px !important;
+  min-width: 0 !important;
+  flex: 1 1 auto !important;
+}
+
+.topbar-info {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  min-width: 0 !important;
+}
+
+.topbar-title {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+/* ===== Members popover ===== */
+.custom-topbar {
+  position: sticky;
+} /* already sticky, ok as anchor */
+.custom-topbar {
+  position: relative;
+} /* anchor for absolute popover */
+
+.members-popover {
+  position: absolute;
+  top: calc(100% + 8px); /* just below the topbar */
+  right: 16px; /* aligned with action buttons */
+  width: 320px;
+  max-height: 360px;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 18px 45px rgba(16, 24, 40, 0.18);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  z-index: 50;
+}
+
+.members-popover__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  background: linear-gradient(180deg, #f7f8fb, #fff);
+  font-weight: 700;
+  font-size: 14px;
+  color: #1d1c1d;
+}
+.members-popover__close {
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: #fff;
+  border-radius: 8px;
+  height: 28px;
+  width: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.members-popover__list {
+  max-height: 300px;
+  overflow-y: auto;
+  background: #fff;
+}
+.members-popover__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  cursor: default;
+}
+.members-popover__item:hover {
+  background: #f7f8fb;
+}
+.members-popover__avatar {
+  height: 32px;
+  width: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #eee;
+  flex-shrink: 0;
+}
+.members-popover__name {
+  font-size: 14px;
+  color: #1d1c1d;
+  font-weight: 600;
+}
+.members-popover__meta {
+  font-size: 12px;
+  color: #616061;
+}
+
+/* small arrow */
+.members-popover::before {
+  content: "";
+  position: absolute;
+  top: -6px;
+  right: 26px;
+  width: 10px;
+  height: 10px;
+  background: #fff;
+  border-left: 1px solid rgba(0, 0, 0, 0.06);
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  transform: rotate(45deg);
+}
+/* Shared tiny close button */
+.pop-close {
+  height: 28px;
+  width: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  cursor: pointer;
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+.pop-close:hover {
+  background: #f7f8fb;
+}
+
+/* Members popover (from earlier) */
+.members-popover {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 16px;
+  width: 320px;
+  max-height: 360px;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 18px 45px rgba(16, 24, 40, 0.18);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  z-index: 50;
+}
+.members-popover__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  background: linear-gradient(180deg, #f7f8fb, #fff);
+  font-weight: 700;
+  font-size: 14px;
+  color: #1d1c1d;
+}
+.members-popover__list {
+  max-height: 300px;
+  overflow-y: auto;
+  background: #fff;
+}
+.members-popover__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+}
+.members-popover__item:hover {
+  background: #f7f8fb;
+}
+.members-popover__avatar {
+  height: 32px;
+  width: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #eee;
+}
+
+/* Pinned Messages modal */
+.pinned-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 60;
+}
+.pinned-modal {
+  width: min(720px, 92vw);
+  max-height: 80vh;
+  overflow: hidden;
+  background: #fff;
+  border-radius: 14px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 30px 80px rgba(16, 24, 40, 0.35);
+  display: flex;
+  flex-direction: column;
+}
+.pinned-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  background: linear-gradient(180deg, #f7f8fb, #fff);
+  font-weight: 700;
+  font-size: 15px;
+}
+.pinned-modal__body {
+  padding: 8px 12px;
+  overflow-y: auto;
+}
+.pinned-item {
+  display: flex;
+  gap: 10px;
+  padding: 10px 8px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+.pinned-item:last-child {
+  border-bottom: none;
+}
+.pinned-item__meta {
+  font-size: 12px;
+  color: #616061;
+}
+.pinned-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 10px 12px;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  background: #fff;
+}
+.btn-text {
+  border: none;
+  background: transparent;
+  padding: 8px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.btn-text:hover {
+  background: #f7f8fb;
+}
+/* Ensure popover can render above everything and isn't clipped */
+.custom-topbar {
+  position: relative;
+  overflow: visible;
+  z-index: 100;
+}
+
+.members-popover {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 16px;
+  width: 320px;
+  max-height: 360px;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 18px 45px rgba(16, 24, 40, 0.18);
+  z-index: 1000; /* sit on top of everything */
+}
+
+.members-popover__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  background: linear-gradient(180deg, #f7f8fb, #fff);
+  font-weight: 700;
+  font-size: 14px;
+  color: #1d1c1d;
+}
+
+.members-popover__close {
+  height: 28px;
+  width: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+}
+.members-popover__close:hover {
+  background: #f1f4f8;
+}
+.members-popover__close {
+  height: 28px;
+  width: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+}
+.members-popover__close:hover {
+  background: #f1f4f8;
+}
+/* make sure the popover can sit over the header */
+.custom-topbar {
+  position: relative;
+  overflow: visible;
+  z-index: 100;
+}
+
+/* ---------- Members popover ---------- */
+.members-popover {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 16px;
+  width: 320px;
+  max-height: 360px;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 12px;
+  box-shadow: 0 18px 45px rgba(16, 24, 40, 0.18);
+  z-index: 1000;
+}
+
+.members-popover__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  background: linear-gradient(180deg, #f7f8fb, #fff);
+  font-weight: 700;
+  font-size: 14px;
+  color: #1d1c1d;
+}
+
+/* same visual language as your create-channel close button */
+.members-popover__close,
+.pinned-modal__close {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  color: #1d1c1d;
+  cursor: pointer;
+  height: 28px;
+  width: 28px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+  transition: all 0.2s ease;
+}
+.members-popover__close:hover,
+.pinned-modal__close:hover {
+  background: #f1f4f8;
+  transform: translateY(-1px);
+}
+
+/* use dark icons inside white popover so the X is visible */
+.members-popover svg {
+  color: #1d1c1d !important;
+}
+
+.members-popover__list {
+  max-height: 300px;
+  overflow-y: auto;
+}
+.members-popover__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+}
+.members-popover__item:hover {
+  background: #f7f8fb;
+}
+.members-popover__avatar {
+  height: 32px;
+  width: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #eee;
+}
+.members-popover__name {
+  font-weight: 600;
+  color: #1d1c1d;
+}
+.members-popover__meta {
+  font-size: 12px;
+  color: #616061;
+}
+
+/* ---------- Pinned messages modal ---------- */
+.pinned-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1200;
+}
+.pinned-modal {
+  width: min(720px, 92vw);
+  max-height: 80vh;
+  overflow: hidden;
+  background: #fff;
+  border-radius: 14px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 30px 80px rgba(16, 24, 40, 0.35);
+  display: flex;
+  flex-direction: column;
+}
+.pinned-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  background: linear-gradient(180deg, #f7f8fb, #fff);
+  font-weight: 700;
+  font-size: 15px;
+  color: #1d1c1d;
+}
+.pinned-modal__body {
+  padding: 8px 12px;
+  overflow-y: auto;
+}
+.pinned-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 8px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+.pinned-item:last-child {
+  border-bottom: none;
+}
+.pinned-item__meta {
+  font-size: 12px;
+  color: #616061;
+}
+.pinned-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 10px 12px;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  background: #fff;
+}
+.btn-text {
+  border: none;
+  background: transparent;
+  padding: 8px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.btn-text:hover {
+  background: #f7f8fb;
+}
+/* Overlay */
+.pinned-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 15, 20, 0.55);
+  display: grid;
+  place-items: center;
+  z-index: 60;
+}
+
+/* Modal */
+.pinned-modal {
+  width: min(680px, 92vw);
+  max-height: 80vh;
+  background: var(--bg-elevated, #0e0f13);
+  border: 1px solid var(--border, #23242a);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.pinned-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border, #23242a);
+  background: var(--bg-header, #101217);
+}
+
+.pinned-modal__title {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 14px;
+}
+.pinned-modal__count {
+  color: #8b8d93;
+  font-weight: 500;
+}
+
+.pinned-modal__close {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  cursor: pointer;
+}
+.pinned-modal__close:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: var(--border, #23242a);
+}
+
+/* List container */
+.pinned-list {
+  overflow: auto;
+  padding: 6px 0;
+}
+
+/* Empty */
+.pinned-empty {
+  padding: 24px;
+  color: #9a9ca3;
+  text-align: center;
+}
+
+/* Item layout */
+.pinned-item {
+  display: grid;
+  grid-template-columns: 40px 1fr auto;
+  gap: 12px;
+  padding: 10px 14px;
+  align-items: start;
+  border-bottom: 1px solid var(--border, #20222a);
+}
+.pinned-item:last-child {
+  border-bottom: none;
+}
+
+/* Avatar */
+.pinned-item__avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #1a1c22;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+.pinned-item__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.pinned-item__avatar--placeholder {
+  width: 70%;
+  height: 70%;
+  border-radius: 50%;
+  background: #2a2c33;
+}
+
+/* Content */
+.pinned-item__content {
+  min-width: 0; /* allow text truncation/wrap inside */
+}
+
+.pinned-item__row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 2px;
+}
+
+.pinned-item__author {
+  font-weight: 600;
+  font-size: 13px;
+  color: #e7e8ea;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pinned-item__meta {
+  font-size: 12px;
+  color: #9a9ca3;
+  white-space: nowrap;
+  margin-left: 8px;
+}
+
+.pinned-item__text {
+  font-size: 13px;
+  line-height: 1.45;
+  color: #cfd1d6;
+  word-break: break-word;
+}
+
+.pinned-item__attachments {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.pinned-item__attachment {
+  display: inline-block;
+  font-size: 12px;
+  padding: 6px 8px;
+  border: 1px solid var(--border, #23242a);
+  border-radius: 8px;
+  background: #12141a;
+  text-decoration: none;
+  color: #cfd1d6;
+}
+.pinned-item__attachment:hover {
+  background: #151820;
+}
+
+/* Actions */
+.pinned-item__actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-end;
+}
+.pinned-action {
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border, #23242a);
+  background: #12141a;
+  color: #cfd1d6;
+  font-size: 12px;
+  cursor: pointer;
+}
+.pinned-action:hover {
+  background: #151820;
+}
+
+/* Responsive: stack actions under content on narrow widths */
+@media (max-width: 560px) {
+  .pinned-item {
+    grid-template-columns: 40px 1fr;
+  }
+  .pinned-item__actions {
+    grid-column: 2 / 3;
+    justify-content: flex-start;
+    margin-top: 6px;
+  }
+}
+/* Overlay */
+.pinned-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 15, 20, 0.55);
+  display: grid;
+  place-items: center;
+  z-index: 1000; /* make sure modal is on top */
+}
+
+/* Modal */
+.pinned-modal {
+  width: min(680px, 92vw);
+  max-height: 80vh;
+  background: #0e0f13;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Header with space-between */
+.pinned-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid #23242a;
+  background: #101217;
+}
+
+.pinned-modal__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.pinned-modal__count {
+  color: #9a9ca3;
+}
+
+/* Close button */
+.pinned-modal__close {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  cursor: pointer;
+  color: #fff; /* force white so it’s visible */
+}
+
+.pinned-modal__close:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+/* Overlay */
+.pinned-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 15, 20, 0.55);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* align to top */
+  z-index: 1000;
+  overflow-y: auto; /* allow scrolling if modal taller than screen */
+  padding-top: 60px; /* push modal a bit below the top */
+  padding-bottom: 40px;
+}
+
+/* Modal */
+.pinned-modal {
+  width: min(680px, 92vw);
+  max-height: 80vh;
+  background: #0e0f13;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+/* Overlay (keeps earlier offset) */
+.pinned-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 15, 20, 0.55);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  z-index: 1000;
+  overflow-y: auto;
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+
+/* Modal: flex column + safe max-height */
+.pinned-modal {
+  width: min(680px, 92vw);
+  max-height: calc(100vh - 100px); /* respects overlay padding */
+  background: #0e0f13;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* clip rounded corners */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+/* Sticky header so actions stay visible while scrolling */
+.pinned-modal__header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid #23242a;
+  background: #101217;
+}
+
+/* The scrollable content area */
+.pinned-list {
+  flex: 1; /* fill remaining height */
+  min-height: 0; /* allow flex child to shrink so overflow works */
+  overflow-y: auto; /* scroll messages */
+  padding: 6px 0;
+}
+
+/* Empty state also fills and scrolls if needed */
+.pinned-empty {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 24px;
+  color: #9a9ca3;
+  text-align: center;
+}
+
+/* Each item stays auto-height; content wraps */
+.pinned-item {
+  display: grid;
+  grid-template-columns: 40px 1fr auto;
+  gap: 12px;
+  padding: 10px 14px;
+  align-items: start;
+  border-bottom: 1px solid #20222a;
+}
+.pinned-item:last-child {
+  border-bottom: none;
+}
+
+.pinned-item__content {
+  min-width: 0;
+}
+.pinned-item__text {
+  word-break: break-word;
+}
+/* Make each pinned item a button for easy click-to-jump */
+.pinned-item--clickable {
+  all: unset;
+  display: grid;
+  grid-template-columns: 40px 1fr auto;
+  gap: 12px;
+  padding: 10px 14px;
+  align-items: start;
+  border-bottom: 1px solid #20222a;
+  cursor: pointer;
+}
+.pinned-item--clickable:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+/* Optional highlight style in chat after jumping */
+.message--jump-highlight {
+  outline: 2px solid #7c5cff;
+  background: rgba(124, 92, 255, 0.08);
+  transition: background 600ms ease;
+}
