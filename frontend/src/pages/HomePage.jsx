@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router"; // ✅ from react-router-dom
 import { useStreamChat } from "../hooks/useStreamChat.js";
 import PageLoader from "../components/PageLoader";
+import GuidelinesModal from "../components/GuidelinesModal";
 
 import {
   Chat,
@@ -27,7 +28,43 @@ const HomePage = () => {
   const [activeTab, setActiveTab] = useState("channels"); // "dm" | "channels" | "calls"
   const [searchParams, setSearchParams] = useSearchParams();
 
+  // Guidelines acceptance state
+  const [hasAccepted, setHasAccepted] = useState(
+    localStorage.getItem("acceptedGuidelines") === "true"
+  );
+
   const { chatClient, error, isLoading } = useStreamChat();
+
+  // Helper function to get background class based on active tab
+  const getBackgroundClass = () => {
+    switch (activeTab) {
+      case "dm":
+        return "dm-bg";
+      case "channels":
+        return "channel-bg";
+      case "calls":
+        return "calls-bg";
+      default:
+        return "channel-bg";
+    }
+  };
+
+  // Handle guidelines acceptance
+  const handleAcceptGuidelines = () => {
+    localStorage.setItem("acceptedGuidelines", "true");
+    setHasAccepted(true);
+
+    // Optional: Also store in your backend
+    // fetch('/api/user/accept-guidelines', {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' }
+    // });
+  };
+
+  // Show guidelines again (for testing or if user wants to review)
+  const showGuidelines = () => {
+    setHasAccepted(false);
+  };
 
   // set active channel from URL params
   useEffect(() => {
@@ -39,6 +76,11 @@ const HomePage = () => {
       }
     }
   }, [chatClient, searchParams]);
+
+  // Show guidelines modal if user hasn't accepted yet
+  if (!hasAccepted) {
+    return <GuidelinesModal onAccept={handleAcceptGuidelines} />;
+  }
 
   if (error) return <p>Something went wrong...</p>;
   if (isLoading || !chatClient) return <PageLoader />;
@@ -190,7 +232,7 @@ const HomePage = () => {
           </div>
 
           {/* RIGHT MAIN CHAT */}
-          <div className="chat-main">
+          <div className={`chat-main ${getBackgroundClass()}`}>
             <Channel channel={activeChannel}>
               <Window>
                 <CustomChannelHeader />
