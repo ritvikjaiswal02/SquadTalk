@@ -3287,3 +3287,224 @@ body,
   background: rgba(124, 92, 255, 0.08);
   transition: background 600ms ease;
 }
+/* Guidelines Modal Styles */
+.guidelines-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 20px;
+}
+
+.guidelines-modal {
+  background: white;
+  border-radius: 16px;
+  max-width: 600px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.guidelines-header {
+  text-align: center;
+  padding: 32px 32px 24px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.guidelines-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 50%;
+  color: white;
+  margin-bottom: 16px;
+}
+
+.guidelines-modal h2 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 8px;
+}
+
+.guidelines-subtitle {
+  font-size: 16px;
+  color: #6b7280;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.guidelines-content {
+  padding: 24px 32px;
+}
+
+.guidelines-section {
+  margin-bottom: 24px;
+}
+
+.guidelines-section h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #374151;
+  margin: 0 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.guidelines-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.guidelines-section li {
+  padding: 6px 0;
+  padding-left: 24px;
+  position: relative;
+  color: #4b5563;
+  line-height: 1.5;
+}
+
+.guidelines-section li::before {
+  content: "•";
+  color: #667eea;
+  position: absolute;
+  left: 8px;
+  font-weight: bold;
+}
+
+.guidelines-warning {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  background: #fef3c7;
+  border: 1px solid #f59e0b;
+  border-radius: 8px;
+  color: #92400e;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.guidelines-footer {
+  padding: 24px 32px 32px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.guidelines-checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 24px;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #374151;
+}
+
+.guidelines-checkbox input[type="checkbox"] {
+  display: none;
+}
+
+.checkmark {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #d1d5db;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.guidelines-checkbox input[type="checkbox"]:checked + .checkmark {
+  background: #667eea;
+  border-color: #667eea;
+}
+
+.guidelines-checkbox input[type="checkbox"]:checked + .checkmark::after {
+  content: "✓";
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.guidelines-accept-btn {
+  width: 100%;
+  padding: 16px 24px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.guidelines-accept-btn:enabled:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+.guidelines-accept-btn:disabled {
+  background: #d1d5db;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 640px) {
+  .guidelines-overlay {
+    padding: 16px;
+  }
+
+  .guidelines-modal {
+    max-height: 90vh;
+  }
+
+  .guidelines-header,
+  .guidelines-content,
+  .guidelines-footer {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .guidelines-modal h2 {
+    font-size: 24px;
+  }
+}
+
+.app-rail__footer {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 12px;
+}
